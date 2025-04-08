@@ -29,7 +29,12 @@ def create_quiz():
             #Ask the user for the correct answer
             answer = input("Enter the correct answer (a, b, c, d): ")
             quiz_file.write(f"Answer: {answer}\n")
-            break
+            quiz_file.write("\n")
+            
+            #Ask the user if they want to add another question
+            another = input("Do you want to add another question? (yes/no): ")
+            if another.lower().strip() != "yes":
+                break
 
 create_quiz()
 
