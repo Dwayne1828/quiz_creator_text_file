@@ -13,17 +13,23 @@ def create_quiz():
             
             #Ask the user for choices 
             for i in range(4): 
-                choice = input("Enter choices (A, B, C, D): ")
                 if i == 0: 
-                    quiz_file.write(f"Choice A: {choice}\n")
+                    choice = input("Enter choice a: ")
+                    quiz_file.write(f"Choice a: {choice}\n")
                 if i == 1: 
-                    quiz_file.write(f"Choice B: {choice}\n")
+                    choice = input("Enter choice b: ")
+                    quiz_file.write(f"Choice b: {choice}\n")
                 if i == 2:
-                    quiz_file.write(f"Choice C: {choice}\n")
+                    choice = input("Enter choice c: ")
+                    quiz_file.write(f"Choice c: {choice}\n")
                 if i == 3:
-                    quiz_file.write(f"Choice D: {choice}\n")
+                    choice = input("Enter choice d: ")
+                    quiz_file.write(f"Choice d: {choice}\n")
             
+            #Ask the user for the correct answer
+            answer = input("Enter the correct answer (a, b, c, d): ")
+            quiz_file.write(f"Answer: {answer}\n")
             break
-        
+
 create_quiz()
 
