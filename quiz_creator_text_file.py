@@ -1,23 +1,23 @@
 import os 
 
 def file_maker(): 
-    file_name = input("Enter the file name for your quiz: ").strip()
-    #Check if the file name ends with .txt, if not add it
-    if file_name.endswith(".txt"):
-       file_name = file_name
-    else:
-        file_name = file_name + ".txt"
+    while True:   
+        file_name = input("Enter the file name for your quiz: ").strip()
+        #Check if the file name ends with .txt, if not add it
+        if file_name.endswith(".txt"):
+            file_name = file_name
+        else:
+            file_name = file_name + ".txt"
 
-    #Check if the file already exists, if it does ask the user if they want to edit it or create a new one
-    if os.path.exists(file_name): 
-        edit = input("File already exists. Do you wish to edit the file? (yes/no): ")
-        if edit.lower().strip() == "yes": 
+        #Check if the file already exists, if it does ask the user if they want to edit it or create a new one
+        if os.path.exists(file_name): 
+            edit = input("File already exists. Do you wish to edit the file? (yes/no): ")
+            if edit.lower().strip() == "yes": 
+                return file_name
+            elif edit.lower().strip() == "no": 
+                continue
+        else: 
             return file_name
-        elif edit.lower().strip() == "no": 
-            file_name = input("Enter a new file name: ")
-            return file_name 
-    else: 
-        return file_name
 
 #Function to asks the user for questions and answers and writes them to the file
 def create_quiz():
