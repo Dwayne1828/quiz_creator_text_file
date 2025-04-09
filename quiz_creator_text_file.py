@@ -5,10 +5,8 @@ def file_maker():
     while True:   
         file_name = input("Enter the file name for your quiz: ").strip()
         #Check if the file name ends with .txt, if not add it
-        if file_name.endswith(".txt"):
-            file_name = file_name
-        else:
-            file_name = file_name + ".txt"
+        if not file_name.endswith(".txt"):
+            file_name += ".txt"
 
         #Check if the file already exists, if it does ask the user if they want to edit it or create a new one
         if os.path.exists(file_name): 
@@ -16,7 +14,13 @@ def file_maker():
             if edit.lower().strip() == "yes": 
                 return file_name
             elif edit.lower().strip() == "no": 
-                continue
+                ask_again = input("Do you want to create a new file? (yes/no): ")
+                if ask_again.lower().strip() == "yes": 
+                    continue
+                else: 
+                    print("Exiting...")
+                    exit()
+        #If the file does not exist, return the file name       
         else: 
             return file_name
 
@@ -42,6 +46,9 @@ def question_checker(file_name):
 def create_quiz():
     #Get the file name from the user
     file_name = file_maker()
+    
+    #Starts the Question number at 1
+    question_number = question_checker(file_name)
 
     #Open the file in append mode to create if exists or create a new one
     with open(file_name, "a") as quiz_file:
@@ -52,13 +59,10 @@ def create_quiz():
         quiz_file.write(f"Quiz Created - {current_time_date}\n")
         quiz_file.write("\n")
 
-        #Starts the Question number at 1
-        question_number = question_checker(file_name)
-
         #While true for a loop to allow the user to decide when to stop entering questions
         while True: 
             question = input("Enter a question: ") 
-            quiz_file.write(f"Question {question_number}: {question}\n") 
+            quiz_file.write(f"Question {question_number}:\n {question}\n") 
             question_number += 1
 
             #Ask the user for choices 
@@ -67,13 +71,21 @@ def create_quiz():
                 quiz_file.write(f"Choice {option}: {choice}\n")
                 
             #Ask the user for the correct answer
-            answer = input("Enter the correct answer (a, b, c, d): ")
-            quiz_file.write(f"Answer: {answer}\n")
-            quiz_file.write("\n")
-        
+            while True:
+                answer = input("Enter the correct answer (a, b, c, d): ")
+                if answer in ["a", "b", "c", "d"]:
+                    quiz_file.write(f"Answer: {answer}\n")
+                    quiz_file.write("\n")
+                    break
+                else:
+                    print("Invalid answer. Please enter a, b, c, or d.")
+                    continue
+                
             #Ask the user if they want to add another question
             another = input("Do you want to add another question? (yes/no): ")
             if another.lower().strip() != "yes":
+                print("Quiz created successfully!")
+                print(f"Quiz saved to {file_name}")
                 break
 
 create_quiz()
