@@ -1,4 +1,5 @@
 import os 
+from datetime import datetime
 
 def file_maker(): 
     while True:   
@@ -24,9 +25,13 @@ def create_quiz():
     #Get the file name from the user
     file_name = file_maker()
 
-    #Open the file in write mode to create a new quiz file
+    #Open the file in append mode to create if exists or create a new one
     with open(file_name, "a") as quiz_file:
-        quiz_file.write("Quiz Creator\n")
+        #Get the current date and time
+        now = datetime.now()
+        current_time_date = now.strftime("%m/%d/%Y %H:%M:%S")
+
+        quiz_file.write(f"Quiz Created - {current_time_date}\n")
         quiz_file.write("\n")
 
         #While true for a loop to allow the user to decide when to stop entering questions
@@ -35,20 +40,10 @@ def create_quiz():
             quiz_file.write(f"Question: {question}\n") 
             
             #Ask the user for choices 
-            for i in range(4): 
-                if i == 0: 
-                    choice = input("Enter choice a: ")
-                    quiz_file.write(f"Choice a: {choice}\n")
-                if i == 1: 
-                    choice = input("Enter choice b: ")
-                    quiz_file.write(f"Choice b: {choice}\n")
-                if i == 2:
-                    choice = input("Enter choice c: ")
-                    quiz_file.write(f"Choice c: {choice}\n")
-                if i == 3:
-                    choice = input("Enter choice d: ")
-                    quiz_file.write(f"Choice d: {choice}\n")
-            
+            for option in ["a", "b", "c", "d"]: 
+                choice = input(f"Enter choice {option}: ")
+                quiz_file.write(f"Choice {option}: {choice}\n")
+                
             #Ask the user for the correct answer
             answer = input("Enter the correct answer (a, b, c, d): ")
             quiz_file.write(f"Answer: {answer}\n")
