@@ -30,8 +30,13 @@ def question_checker(file_name):
         for line in reversed(lines):
             if line.startswith("Question"):
                 #Get the question number from the line
-                question_number = int(lines.split()[1].strip(":"))
-                return question_number + 1 #Return the next question number
+                try:   
+                    question_number = int(line.split()[1].strip(":"))
+                    return question_number + 1
+                except (ValueError, IndexError):
+                    continue
+    
+    return 1 
 
 #Function to asks the user for questions and answers and writes them to the file
 def create_quiz():
@@ -48,7 +53,7 @@ def create_quiz():
         quiz_file.write("\n")
 
         #Starts the Question number at 1
-        question_number = int(question_checker(file_name))
+        question_number = question_checker(file_name)
 
         #While true for a loop to allow the user to decide when to stop entering questions
         while True: 
