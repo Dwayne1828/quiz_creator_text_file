@@ -1,8 +1,15 @@
 
+def file_maker(): 
+    file_name = input("Enter the file name for your quiz maker: ")
+    return file_name + ".txt"
+
 #Function to asks the user for questions and answers and writes them to the file
 def create_quiz():
+    #Get the file name from the user
+    file_name = file_maker()
+
     #Open the file in write mode to create a new quiz file
-    with open("quiz.txt", "w") as quiz_file:
+    with open(file_name, "w") as quiz_file:
         quiz_file.write("Quiz Creator\n")
         quiz_file.write("\n")
 
