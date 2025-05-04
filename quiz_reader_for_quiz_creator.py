@@ -21,6 +21,8 @@ def quiz_reader():
                 questions["answer"] = line.split(": ")[1].strip()
             else: 
                 questions["question"] += " " + line #Accumulates the question text including the Question number
+
+            if questions["question"] and questions["choices"] and questions["answer"]:    
                 complete_Questions.append(questions) #Adds the question to the Questions list
                 questions = {"question": "", "choices": [], "answer": None} #Resets the dictionary for the next question
         
