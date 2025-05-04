@@ -4,7 +4,7 @@ def quiz_reader():
         lines = file.readlines() #Stores the lines in a list 
  
         #Create a dictionary to store the questions, choices, and answers
-        questions = {"choices": []} #Initialize the dictionary with empty lists for choices and answer
+        questions = {"choices": [], "answer": None} #Initialize the dictionary with empty lists for choices and answer
 
         #Iterate through the lines to check for the presence of a question, choices, and answer
         for line in lines: 
@@ -12,10 +12,12 @@ def quiz_reader():
             
             if "Quiz Created" in line: #Checks if the line contains the word "Quiz Created"
                 continue #If it does, skip the line
-            if "Choice" in line: #Checks if the line contains the word "Choice"
+            elif "Choice" in line: #Checks if the line contains the word "Choice"
                 questions["choices"].append(line) #Adds the choices into the choices list
+            elif "Answer" in line: #Checks if the line contains the word "Answer"
+                questions["answer"] = line.split(": ")[1].strip()
 
-        print(questions)
+        print(questions["answer"])
 
 quiz_reader()
 
