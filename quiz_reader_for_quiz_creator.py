@@ -6,7 +6,7 @@ class QuizReader:
         
         self.root = tk.Tk()
         
-        self.choosed_answer = tk.StringVar()
+        self.choosed_answer = tk.IntVar()
         self.question_no = 0
         self.questions = self.quiz_reader() #Calls the quiz_reader method to read the quiz file and store the questions
 
@@ -19,6 +19,7 @@ class QuizReader:
         self.next_button.config(font=("Arial", 10), width=10, height=2) #Sets the font, width, and height for the button
 
         self.radio_btn = self.choices_radio_btn()
+        self.options_question_no()
 
     def quiz_reader(self): 
         with open(self.file_name, "r") as file:
@@ -72,29 +73,26 @@ class QuizReader:
 
     def options_question_no(self):
         radio_button = 0
+        self.choosed_answer.set(-1)
 
         for choices in self.questions[self.question_no]["choices"]:
-            self.radio_btn[radio_button]["text"] = choices.split(": ")[1].strip() #Sets the text of the radio button to the choice
+            self.radio_btn[radio_button]['text'] = choices.split(": ")[1].strip() #Sets the text of the radio button to the choice
             radio_button += 1
 
 
     def choices_radio_btn(self):
         
-        choices_list = [] 
+        radio_buttons = []
         rely = 0.4
-        index = 0
 
-        while len(choices_list) < 4: 
-            for choice in self.questions[self.question_no]["choices"]:
-                choice = self.questions[self.question_no]["choices"][index].split(": ")[1].strip()
-                radio_buttons = tk.Radiobutton(self.root, text=choice, variable=self.choosed_answer, value=choice)
-                radio_buttons.place(relx=0.5, rely=rely, anchor="center") #Places the radio buttons in the window
-
-            choices_list.append(choice)
+        while len(radio_buttons) < 4: 
+            radio_btn = tk.Radiobutton(self.root, text="", variable=self.choosed_answer, value=len(radio_buttons), anchor="w")
+            radio_btn.place(relx=0.5, rely=rely, anchor="center")
+            radio_btn.config(font=("Arial", 12), wraplength=600)
+            radio_buttons.append(radio_btn)
             rely += 0.05
-            index += 1
             
-        return choices_list
+        return radio_buttons
 
        
 quiz = QuizReader("Existingfile.txt")
