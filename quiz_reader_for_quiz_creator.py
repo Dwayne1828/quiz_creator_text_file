@@ -1,7 +1,13 @@
+import tkinter as tk
+
 class QuizReader:
     def __init__(self, file_name): 
         self.file_name = file_name #Initialize the file name
-        self.quiz_reader() #Call the quiz_reader method to read the quiz file
+        
+        self.question_no = 0
+        
+        self.questions = self.quiz_reader() #Call the quiz_reader method to read the quiz file
+        self.print_quiz() #Call the print_quiz method to display the quiz questions
         self.checking_answer() #Call the checking_answer method to check the user's answer
 
     def quiz_reader(self): 
@@ -37,6 +43,15 @@ class QuizReader:
         else:
             return complete_questions #Returns the list of questions with choices and answers        
 
+
+    def print_quiz(self):
+        if self.question_no < len(self.questions):  
+            display_question = tk.Label(root, text=self.questions[self.question_no]["question"]) #Creates a label to display the quiz questions
+            display_question.pack()
+
+            self.question_no += 1 #Initialize the question number to 0
+
+
     def checking_answer(self):
         for question_no in self.quiz_reader():
             print(f"\n{question_no['question'].strip()}")
@@ -55,7 +70,10 @@ class QuizReader:
                 else:
                     print("⚠️ Invalid input! Please enter a, b, c, or d.")
 
-
+root = tk.Tk()
+root.title("Quiz")
+root.geometry("800x450")
 quiz = QuizReader("Existingfile.txt")
+root.mainloop()
 
 
