@@ -18,7 +18,7 @@ class QuizReader:
         self.next_button.place(relx=0.5, rely=0.7, anchor="center")
         self.next_button.config(font=("Arial", 10), width=10, height=2) #Sets the font, width, and height for the button
 
-        self.choices_radio_btn()
+        self.radio_btn = self.choices_radio_btn()
 
     def quiz_reader(self): 
         with open(self.file_name, "r") as file:
@@ -69,20 +69,30 @@ class QuizReader:
             self.display_question.config(text=self.questions[self.question_no]["question"].strip()) #Displays the question
             self.question_no += 1
     
-    
+
+    def options_question_no(self):
+        radio_button = 0
+
+        for choices in self.questions[self.question_no]["choices"]:
+            self.radio_btn[radio_button]["text"] = choices.split(": ")[1].strip() #Sets the text of the radio button to the choice
+            radio_button += 1
+
+
     def choices_radio_btn(self):
         
         choices_list = [] 
         rely = 0.4
+        index = 0
 
         while len(choices_list) < 4: 
             for choice in self.questions[self.question_no]["choices"]:
-                choice = choice.split(": ")[1].strip()
+                choice = self.questions[self.question_no]["choices"][index].split(": ")[1].strip()
                 radio_buttons = tk.Radiobutton(self.root, text=choice, variable=self.choosed_answer, value=choice)
                 radio_buttons.place(relx=0.5, rely=rely, anchor="center") #Places the radio buttons in the window
 
             choices_list.append(choice)
             rely += 0.05
+            index += 1
             
         return choices_list
 
