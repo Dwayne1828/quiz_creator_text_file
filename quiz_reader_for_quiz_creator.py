@@ -4,12 +4,19 @@ class QuizReader:
     def __init__(self, file_name): 
         self.file_name = file_name #Initialize the file name
         
-        self.question_no = 0
+        self.root = tk.Tk()
         
-        self.questions = self.quiz_reader() #Call the quiz_reader method to read the quiz file
-        self.checking_answer() #Call the checking_answer method to check the user's answer
-        self.print_quiz() #Call the print_quiz method to display the quiz question
-        self.next_question()
+        self.question_no = 0
+        self.questions = self.quiz_reader() #Calls the quiz_reader method to read the quiz file and store the questions
+
+        self.display_question = tk.Label(self.root, text="Start") #Creates a label to display the quiz questions
+        self.display_question.place(relx=0.5, rely=0.4, anchor="center")
+        self.display_question.config(font=("Arial", 16), wraplength=700) #Sets the font and wrap length for the label
+        
+        self.next_button = tk.Button(self.root, text="Let's Go!", command=self.next_question) #Creates a button to navigate to the next question
+        self.next_button.place(relx=0.5, rely=0.7, anchor="center")
+        self.next_button.config(font=("Arial", 10), width=10, height=2) #Sets the font, width, and height for the button
+
 
     def quiz_reader(self): 
         with open(self.file_name, "r") as file:
@@ -47,18 +54,20 @@ class QuizReader:
 
     def print_quiz(self):
         if self.question_no < len(self.questions):  
-            display_question = tk.Label(root, text=self.questions[self.question_no]["question"]) #Creates a label to display the quiz questions
-            display_question.place(x=70, y=100)
-            display_question.pack()
-            self.question_no += 1 #Increments the question number to display the next question
-    
+            self.display_question.config(text=self.questions[self.question_no]["question"].strip()) #Displays the question
+            self.question_no += 1
+        else:
+            self.display_question.config(text="Quiz Completed!")
+            self.next_button.config(text="Finish", command=self.root.quit)
+
     
     def next_question(self):
-        next_button = tk.Button(root, text="Next Question", command=self.print_quiz)
-        next_button.place(x=70, y=150)
-        next_button.pack()
-        
-
+        if self.question_no < len(self.questions):   
+            self.next_button.config(text="Next", command=self.print_quiz) #Changes the button text to "Next"
+            self.display_question.config(text=self.questions[self.question_no]["question"].strip()) #Displays the question
+            self.question_no += 1
+    
+    
     def checking_answer(self):
         for question_no in self.quiz_reader():
             print(f"\n{question_no['question'].strip()}")
@@ -77,10 +86,9 @@ class QuizReader:
                 else:
                     print("⚠️ Invalid input! Please enter a, b, c, or d.")
 
-root = tk.Tk()
-root.title("Quiz")
-root.geometry("800x450")
-quiz = QuizReader("Existingfile.txt")
-root.mainloop()
 
+quiz = QuizReader("Existingfile.txt")
+quiz.root.title("Quiz")
+quiz.root.geometry("800x450")
+quiz.root.mainloop()
 
