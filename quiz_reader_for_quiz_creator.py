@@ -18,11 +18,7 @@ class QuizReader:
         self.next_button.place(relx=0.5, rely=0.7, anchor="center")
         self.next_button.config(font=("Arial", 10), width=10, height=2) #Sets the font, width, and height for the button
 
-        self.radio_btn = self.choices_radio_btn()
-        self.options_question_no()
-
-
-
+        
 
     def quiz_reader(self): 
         with open(self.file_name, "r") as file:
@@ -68,13 +64,18 @@ class QuizReader:
         else:
             self.display_question.config(text="Quiz Completed!")
             self.next_button.config(text="Finish", command=self.root.quit)
+            
+            for btn in self.radio_btn:
+                btn.place_forget()
 
-    
+
 
     def next_question(self):
         
         if self.question_no < len(self.questions):   
             self.next_button.config(text="Next", command=self.print_quiz) #Changes the button text to "Next"
+            self.radio_btn = self.choices_radio_btn()
+            self.options_question_no()
             self.display_question.config(text=self.questions[self.question_no]["question"].strip()) #Displays the question
             self.question_no += 1
     
@@ -83,12 +84,12 @@ class QuizReader:
     def options_question_no(self):
         
         radio_button = 0
-        self.choosed_answer.set(-1)
+        self.choosed_answer.set(0)
 
         for choices in self.questions[self.question_no]["choices"]:
             self.radio_btn[radio_button]['text'] = choices.split(": ")[1].strip() #Sets the text of the radio button to the choice
             radio_button += 1
-
+        
 
 
     def choices_radio_btn(self):
