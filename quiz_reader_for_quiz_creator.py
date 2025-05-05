@@ -7,8 +7,9 @@ class QuizReader:
         self.question_no = 0
         
         self.questions = self.quiz_reader() #Call the quiz_reader method to read the quiz file
-        self.print_quiz() #Call the print_quiz method to display the quiz questions
         self.checking_answer() #Call the checking_answer method to check the user's answer
+        self.print_quiz() #Call the print_quiz method to display the quiz question
+        self.next_question()
 
     def quiz_reader(self): 
         with open(self.file_name, "r") as file:
@@ -47,10 +48,16 @@ class QuizReader:
     def print_quiz(self):
         if self.question_no < len(self.questions):  
             display_question = tk.Label(root, text=self.questions[self.question_no]["question"]) #Creates a label to display the quiz questions
+            display_question.place(x=70, y=100)
             display_question.pack()
-
-            self.question_no += 1 #Initialize the question number to 0
-
+            self.question_no += 1 #Increments the question number to display the next question
+    
+    
+    def next_question(self):
+        next_button = tk.Button(root, text="Next Question", command=self.print_quiz)
+        next_button.place(x=70, y=150)
+        next_button.pack()
+        
 
     def checking_answer(self):
         for question_no in self.quiz_reader():
