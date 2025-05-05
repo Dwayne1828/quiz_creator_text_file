@@ -6,17 +6,19 @@ class QuizReader:
         
         self.root = tk.Tk()
         
+        self.choosed_answer = tk.StringVar()
         self.question_no = 0
         self.questions = self.quiz_reader() #Calls the quiz_reader method to read the quiz file and store the questions
 
         self.display_question = tk.Label(self.root, text="Start") #Creates a label to display the quiz questions
-        self.display_question.place(relx=0.5, rely=0.4, anchor="center")
+        self.display_question.place(relx=0.5, rely=0.3, anchor="center")
         self.display_question.config(font=("Arial", 16), wraplength=700) #Sets the font and wrap length for the label
         
         self.next_button = tk.Button(self.root, text="Let's Go!", command=self.next_question) #Creates a button to navigate to the next question
         self.next_button.place(relx=0.5, rely=0.7, anchor="center")
         self.next_button.config(font=("Arial", 10), width=10, height=2) #Sets the font, width, and height for the button
 
+        self.choices_radio_btn()
 
     def quiz_reader(self): 
         with open(self.file_name, "r") as file:
@@ -68,25 +70,23 @@ class QuizReader:
             self.question_no += 1
     
     
-    def checking_answer(self):
-        for question_no in self.quiz_reader():
-            print(f"\n{question_no['question'].strip()}")
-            for choice in question_no["choices"]:
-                print(choice) 
+    def choices_radio_btn(self):
+        
+        choices_list = [] 
+        rely = 0.4
+
+        while len(choices_list) < 4: 
+            for choice in self.questions[self.question_no]["choices"]:
+                choice = choice.split(": ")[1].strip()
+                radio_buttons = tk.Radiobutton(self.root, text=choice, variable=self.choosed_answer, value=choice)
+                radio_buttons.place(relx=0.5, rely=rely, anchor="center") #Places the radio buttons in the window
+
+            choices_list.append(choice)
+            rely += 0.05
             
-            while True:
-                user_answer = input("\nEnter your answer (a, b, c, d): ").strip().lower()
+        return choices_list
 
-                if user_answer in ["a", "b", "c", "d"]:
-                    if user_answer == question_no["answer"]:
-                        print("✅ Correct!")
-                    else:
-                        print("❌ Incorrect!")
-                    break
-                else:
-                    print("⚠️ Invalid input! Please enter a, b, c, or d.")
-
-
+       
 quiz = QuizReader("Existingfile.txt")
 quiz.root.title("Quiz")
 quiz.root.geometry("800x450")
