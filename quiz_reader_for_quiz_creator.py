@@ -1,6 +1,8 @@
 class QuizReader:
     def __init__(self, file_name): 
         self.file_name = file_name #Initialize the file name
+        self.quiz_reader() #Call the quiz_reader method to read the quiz file
+        self.checking_answer() #Call the checking_answer method to check the user's answer
 
     def quiz_reader(self): 
         with open(self.file_name, "r") as file:
@@ -35,9 +37,25 @@ class QuizReader:
         else:
             return complete_questions #Returns the list of questions with choices and answers        
 
+    def checking_answer(self):
+        for question_no in self.quiz_reader():
+            print(f"\n{question_no['question'].strip()}")
+            for choice in question_no["choices"]:
+                print(choice) 
+            
+            while True:
+                user_answer = input("\nEnter your answer (a, b, c, d): ").strip().lower()
+
+                if user_answer in ["a", "b", "c", "d"]:
+                    if user_answer == question_no["answer"]:
+                        print("✅ Correct!")
+                    else:
+                        print("❌ Incorrect!")
+                    break
+                else:
+                    print("⚠️ Invalid input! Please enter a, b, c, or d.")
+
 
 quiz = QuizReader("Existingfile.txt")
-quiz_data = quiz.quiz_reader()
-print(quiz_data)
 
 
