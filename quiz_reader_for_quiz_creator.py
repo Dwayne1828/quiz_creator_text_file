@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 class QuizReader:
     def __init__(self, file_name): 
@@ -47,7 +48,7 @@ class QuizReader:
                     questions = {"question": "", "choices": [], "answer": None} #Resets the dictionary for the next question
 
         if not complete_questions: #Checks if the list is empty
-            print("⚠️ No valid questions found in the file.")
+            tk.messagebox.showinfo("⚠️ No valid questions found in the file.")
             return [] #Returns an empty list if no questions are found
         else:
             return complete_questions #Returns the list of questions with choices and answers        
@@ -55,18 +56,43 @@ class QuizReader:
 
     def next_question(self):
         if self.question_no < len(self.questions):   
-            self.next_button.config(text="Next", command=self.print_quiz) #Changes the button text to "Next"
+            self.next_button.config(text="Next", command=self.current_check_answer) #Changes the button text to "Next"
             self.radio_btn = self.choices_radio_btn()
             self.options_question_no()
-            self.display_question.config(text=self.questions[self.question_no]["question"].strip()) #Displays the question
+            self.display_question.config(text=self.questions[self.question_no]["question"].strip()) 
             self.question_no += 1
 
 
-    def print_quiz(self):
+    def current_check_answer(self):
+        if self.choosed_answer.get() == -1:  # Check if no answer is selected
+            tk.messagebox.showinfo("No Selection", "Please select an answer before proceeding.")
+            return
+
+        self.check_answer() #Calls the check_answer method to check if the answer is correct
+
+    
+    def check_answer(self):
+        answer_mapping = {"a": 0, "b": 1, "c": 2, "d": 3}  # Map string answers to indices
+
+        try:
+            selected_answer = self.choosed_answer.get()  # Get the selected answer as an integer
+            correct_answer = answer_mapping[self.questions[self.question_no - 1]["answer"]]  # Map correct answer to index
+
+            self.root.after(1000, self.advance_question)  # Delay before moving to the next question
+
+            if selected_answer == correct_answer:
+                self.radio_btn[selected_answer].config(bg="green")  # Highlight correct answer
+            else:
+                self.radio_btn[selected_answer].config(bg="red")  # Highlight incorrect answer
+                self.radio_btn[correct_answer].config(bg="green")  # Highlight the correct answer
+        except (KeyError, IndexError):
+            tk.messagebox.showinfo("Error", "An error occurred while checking the answer.")
+
+
+    def advance_question(self):
         if self.question_no < len(self.questions):  
             self.display_question.config(text=self.questions[self.question_no]["question"].strip()) #Displays the question
             self.options_question_no()
-            self.check_answer()
             self.question_no += 1
         else:
             self.display_question.config(text="Quiz Completed!")
@@ -78,10 +104,11 @@ class QuizReader:
 
     def options_question_no(self):
         radio_button = 0
-        self.choosed_answer.set(-1)
+        self.choosed_answer.set(-1)  # Reset the selected answer
 
         for choices in self.questions[self.question_no]["choices"]:
-            self.radio_btn[radio_button]['text'] = choices.split(": ")[1].strip() #Sets the text of the radio button to the choice
+            self.radio_btn[radio_button]['text'] = choices.split(": ")[1].strip()
+            self.radio_btn[radio_button].config(bg="SystemButtonFace")   # Set the text of the radio button
             radio_button += 1
         
 
@@ -101,23 +128,8 @@ class QuizReader:
         return radio_buttons
 
 
-    def check_answer(self):
-        answer_mapping = {0: "a", 1: "b", 2: "c", 3: "d"}  # Map string answers to indices
+    
 
-        try:
-            selected_answer = answer_mapping[self.choosed_answer.get()]  # Convert selected answer to index
-            correct_answer = answer_mapping[self.questions[self.question_no]["answer"]]  # Convert correct answer to index
-
-            if selected_answer == correct_answer:
-                self.radio_btn[selected_answer].config(bg="green")  # Highlight correct answer
-            else:
-                self.radio_btn[selected_answer].config(bg="red")  # Highlight incorrect answer
-                self.radio_btn[correct_answer].config(bg="green")  # Highlight the correct answer
-        except KeyError:
-            print("Invalid selection. Please choose a valid option.")
-
-
-        
 quiz = QuizReader("Existingfile.txt")
 quiz.root.title("Quiz")
 quiz.root.geometry("800x450")
