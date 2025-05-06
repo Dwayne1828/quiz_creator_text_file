@@ -53,7 +53,8 @@ class QuizReader:
 
         if not complete_questions: #Checks if the list is empty
             messagebox.showinfo("⚠️ No valid questions found in the file.")
-            return [] #Returns an empty list if no questions are found
+            self.root.destroy() 
+            exit() #stops the code
         else:
             return complete_questions #Returns the list of questions with choices and answers        
 
