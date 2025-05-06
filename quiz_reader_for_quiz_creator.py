@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 
 class QuizReader:
     def __init__(self, file_name): 
@@ -7,7 +7,11 @@ class QuizReader:
         
         self.root = tk.Tk()
         
+        self.root.title("Quiz")
+        self.root.geometry("800x450")
+        
         self.choosed_answer = tk.IntVar()
+       
         self.question_no = 0
         self.correct_ans = 0
         self.wrong_ans = 0
@@ -60,7 +64,7 @@ class QuizReader:
         if self.question_no < len(self.questions):   
             self.next_button.config(text="Next", command=self.current_check_answer) #Changes the button text to "Next"
             self.next_button.place(relx=0.5, rely=0.7, anchor="center") #Places the button in the center of the window
-            self.radio_btn = self.choices_radio_btn()
+            self.radio_btn = self.choices_radio_btn() 
             self.options_question_no()
             self.display_question.config(text=self.questions[self.question_no]["question"].strip()) 
             self.display_question.place(relx=0.5, rely=0.3, anchor="center") #Displays the question in the label
@@ -143,9 +147,23 @@ class QuizReader:
         return radio_buttons
 
 
-    
-quiz = QuizReader("Existingfile.txt")
-quiz.root.title("Quiz")
-quiz.root.geometry("800x450")
-quiz.root.mainloop()
+
+def start_quiz_with_file():
+    # Open a file dialog to select a quiz file
+    file_path = filedialog.askopenfilename(title="Select Quiz File", 
+                                           filetypes=(("Text files", "*.txt"), ("All files", "*.*")))
+
+    if file_path:
+        app = QuizReader(file_path)
+        app.root.mainloop()
+    else:
+        messagebox.showinfo("No File Selected", "You must select a quiz file to start.")
+
+
+if __name__ == "__main__":
+    launcher = tk.Tk()
+    launcher.withdraw()  # Hide the main root window
+    start_quiz_with_file()
+
+
 
