@@ -6,7 +6,7 @@ class QuizReader:
         
         self.root = tk.Tk()
         
-        self.choosed_answer = tk.StringVar()
+        self.choosed_answer = tk.IntVar()
         self.question_no = 0
         self.questions = self.quiz_reader() #Calls the quiz_reader method to read the quiz file and store the questions
 
@@ -53,19 +53,6 @@ class QuizReader:
             return complete_questions #Returns the list of questions with choices and answers        
 
 
-    def print_quiz(self):
-        if self.question_no < len(self.questions):  
-            self.display_question.config(text=self.questions[self.question_no]["question"].strip()) #Displays the question
-            self.options_question_no()
-            self.question_no += 1
-        else:
-            self.display_question.config(text="Quiz Completed!")
-            self.next_button.config(text="Finish", command=self.root.quit)
-            
-            for btn in self.radio_btn:
-                btn.place_forget()
-
-
     def next_question(self):
         if self.question_no < len(self.questions):   
             self.next_button.config(text="Next", command=self.print_quiz) #Changes the button text to "Next"
@@ -74,17 +61,20 @@ class QuizReader:
             self.display_question.config(text=self.questions[self.question_no]["question"].strip()) #Displays the question
             self.question_no += 1
 
-    
-    def check_answer(self):
-        selected_answer = self.choosed_answer.get() 
-        correct_answer = int(self.questions[self.question_no]["answer"]) - 1 
 
-        if self.choosed_answer.get() == self.questions[self.question_no]["answer"]:
-            self.radio_btn[selected_answer].config(bg="green") #Sets the background color of the correct answer to green
+    def print_quiz(self):
+        if self.question_no < len(self.questions):  
+            self.display_question.config(text=self.questions[self.question_no]["question"].strip()) #Displays the question
+            self.options_question_no()
+            self.check_answer()
+            self.question_no += 1
         else:
-            self.radio_btn[selected_answer].config(bg="red")
-            self.radio_btn[correct_answer].config(bg="green") 
-
+            self.display_question.config(text="Quiz Completed!")
+            self.next_button.config(text="Finish", command=self.root.quit)
+            
+            for btn in self.radio_btn:
+                btn.place_forget()
+    
 
     def options_question_no(self):
         radio_button = 0
@@ -110,8 +100,24 @@ class QuizReader:
             
         return radio_buttons
 
-        
 
+    def check_answer(self):
+        answer_mapping = {0: "a", 1: "b", 2: "c", 3: "d"}  # Map string answers to indices
+
+        try:
+            selected_answer = answer_mapping[self.choosed_answer.get()]  # Convert selected answer to index
+            correct_answer = answer_mapping[self.questions[self.question_no]["answer"]]  # Convert correct answer to index
+
+            if selected_answer == correct_answer:
+                self.radio_btn[selected_answer].config(bg="green")  # Highlight correct answer
+            else:
+                self.radio_btn[selected_answer].config(bg="red")  # Highlight incorrect answer
+                self.radio_btn[correct_answer].config(bg="green")  # Highlight the correct answer
+        except KeyError:
+            print("Invalid selection. Please choose a valid option.")
+
+
+        
 quiz = QuizReader("Existingfile.txt")
 quiz.root.title("Quiz")
 quiz.root.geometry("800x450")
