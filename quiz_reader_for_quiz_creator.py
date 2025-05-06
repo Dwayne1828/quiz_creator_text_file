@@ -2,15 +2,11 @@ import tkinter as tk
 from tkinter import messagebox, filedialog
 
 class QuizReader:
-    def __init__(self, file_name): 
+    def __init__(self, root, file_name): 
         self.file_name = file_name #Initialize the file name
+        self.root = root
         
-        self.root = tk.Tk()
-        
-        self.root.title("Quiz")
-        self.root.geometry("800x450")
-        
-        self.choosed_answer = tk.IntVar()
+        self.choosed_answer = tk.IntVar(master=root)
        
         self.question_no = 0
         self.correct_ans = 0
@@ -154,15 +150,16 @@ def start_quiz_with_file():
                                            filetypes=(("Text files", "*.txt"), ("All files", "*.*")))
 
     if file_path:
-        app = QuizReader(file_path)
-        app.root.mainloop()
+        root = tk.Tk()
+        QuizReader(root, file_path)
+        root.title("Quiz")
+        root.geometry("800x450")
+        root.mainloop()
     else:
         messagebox.showinfo("No File Selected", "You must select a quiz file to start.")
 
 
 if __name__ == "__main__":
-    launcher = tk.Tk()
-    launcher.withdraw()  # Hide the main root window
     start_quiz_with_file()
 
 
